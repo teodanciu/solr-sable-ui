@@ -5,7 +5,7 @@ myAppModule.config(['$httpProvider', function($httpProvider) {
     }
 ]);
 myAppModule.controller("SolrController",
-    function($scope, $http) {
+    function($scope, $http, $compile) {
 
         $scope.queries = [
             "*:*",
@@ -44,21 +44,27 @@ myAppModule.controller("SolrController",
 
             $http.jsonp("http://" + host + ":8983/solr/" + core + "/select?" + params)
               .success(function (data, status, headers, config){
-                    pushToHistory($scope.current, $scope.history);
+                    var newState = {
+                        host: host,
+                        core: core,
+                        query: query,
+                        body: data.response,
+                        title: query + " on " + host + "/" + core
+                    };
 
-                    $scope.current.data = data.response;
-                    $scope.current.title = $scope.current.query + " on " + $scope.current.host + "/" + $scope.current.core;
+                    $.JSONView(newState, 'jsonoutput', false);
+                    $.JSONView($scope.history[0], 'jsonoutput-previous', false);
 
-                    $.JSONView(data.response, 'jsonoutput', false);
-                    $.JSONView($scope.history[0].data, 'jsonoutput-previous', false);
+                    pushToHistory(newState, $scope.history);
+
             }).error(function (data, status, headers, config) {
                     alert("Error:" + status +" data:" + data);
               });
         };
 
-        $scope.rerunHistoryHead = function() {
+        $scope.runHistoryHead = function() {
            $scope.history.shift();
-           var historyHead = $scope.history.shift();
+            var historyHead = $scope.history.shift();
            alert(historyHead.query);
            $scope.makeSolrRequest(historyHead.query, historyHead.host, historyHead.core)
         };
@@ -73,17 +79,14 @@ myAppModule.controller("SolrController",
             $scope.current = {
                 host: initialHost,
                 core: initialCore,
-                query: initialQuery,
-                data: "",
-                title: ""
+                query: initialQuery
             };
-            $scope.historyTitle = "';"
             $scope.history = [
                 {
                     host:"",
                     core: "",
                     query: "",
-                    data: "",
+                    body: "",
                     title: ""
                 }
             ];

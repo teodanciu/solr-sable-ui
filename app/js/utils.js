@@ -9,7 +9,7 @@ function pushToHistory(state, history) {
        host: state.host,
        core: state.core,
        query: state.query,
-       data: state.data,
+       body: state.body,
        title: state.title
     });
 }

@@ -14,10 +14,12 @@
 
 $.extend(jQuery,
 {
-    // json 可傳入 json 或 JavaScript Object
-    // container 為輸出的容器，jQuery Object
-    JSONView: function (json, container, keep) {
+    JSONView: function (state, container, keep) {
+
+        var json = state.body;
+
         var ob;
+
         if (json === "") {
             return;
         } else
@@ -30,10 +32,7 @@ $.extend(jQuery,
         var repeat = function (s, n) {  //產生 s 字元 n 次
             return new Array(n + 1).join(s);
         };
-        //產生 JSON 結構資料的遞迴函數
-        //o     來源物件
-        //isar  資料是 true 的話代表這一次遞迴為陣列資料
-        //s     遞迴階層數
+
         var r = function (o, isar, s) {
             for (var n in o) {
                 var p = o[n];
@@ -112,10 +111,15 @@ $.extend(jQuery,
         }
 
 
+        var containerDiv = jQuery('#' + container);
         if (!keep) {
-            $('#' + container).html("");
+            containerDiv.html("");
         }
-        var result = $('<div id="result"/>').appendTo('#'+container);
+        $('<h3 class="underlined">' + state.title + '</h3>').appendTo(containerDiv);
+
+        var result = $('<div id="result"/>').appendTo(containerDiv);
+
+
 
         var f = true;
         result.addClass('KelpJSONView');
