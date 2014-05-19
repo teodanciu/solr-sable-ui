@@ -8,7 +8,7 @@ myAppModule.controller("SolrController",
     function($scope, $http) {
 
         $scope.queries = [
-            "*.*"
+            "*:*"
         ];
         $scope.hosts = [
             "localhost"
@@ -26,7 +26,15 @@ myAppModule.controller("SolrController",
             pushDistinct(query, $scope.queries);
             pushDistinct(host, $scope.hosts);
 
-            $http.jsonp("http://localhost:8983/solr/collection1/select?q=id%3A%22IW-02%22&indent=true&wt=json&json.wrf=JSON_CALLBACK")
+            var params = jQuery.param({
+                q: query,
+                rows: 50,
+                wt: "json",
+                'json.wrf': "JSON_CALLBACK",
+                indent: true
+            });
+
+            $http.jsonp("http://" + host + ":8983/solr/collection1/select?" + params)
               .success(function (data, status, headers, config){
                     $scope.previous.data = $scope.current.data;
                     $scope.previous.title = $scope.current.title;
