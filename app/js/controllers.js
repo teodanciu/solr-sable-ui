@@ -22,15 +22,19 @@ myAppModule.controller("SolrController",
 
 //        var userId = Math.floor(Math.random()*10 + 1);
 //        $http.get("http://jsonplaceholder.typicode.com/posts?userId="+ userId).
-        $scope.makeSolrRequest = function() {
-            pushDistinct($scope.current.query, $scope.queries);
-            pushDistinct($scope.current.host, $scope.hosts);
+        $scope.makeSolrRequest = function(query, host) {
+            pushDistinct(query, $scope.queries);
+            pushDistinct(host, $scope.hosts);
+
             $http.jsonp("http://localhost:8983/solr/collection1/select?q=id%3A%22IW-02%22&indent=true&wt=json&json.wrf=JSON_CALLBACK")
               .success(function (data, status, headers, config){
                     $scope.previous.data = $scope.current.data;
                     $scope.previous.title = $scope.current.title;
+                    $scope.previous.query = $scope.current.query;
+                    $scope.previous.host = $scope.current.host;
                     $scope.current.data = data.response;
                     $scope.current.title = $scope.current.query + " on " + $scope.current.host;
+
                     $.JSONView(data.response, 'jsonoutput');
                     $.JSONView($scope.previous.data, 'jsonoutput-previous');
             }).error(function (data, status, headers, config) {
