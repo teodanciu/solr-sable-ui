@@ -8,7 +8,9 @@ myAppModule.controller("SolrController",
     function($scope, $http) {
 
         $scope.queries = [
-            "*:*"
+            "*:*",
+            "inStock: true",
+            "manu_id_s: maxtor",
         ];
         $scope.hosts = [
             "localhost"
@@ -52,6 +54,13 @@ myAppModule.controller("SolrController",
             }).error(function (data, status, headers, config) {
                     alert("Error:" + status +" data:" + data);
               });
+        };
+
+        $scope.rerunHistoryHead = function() {
+           $scope.history.shift();
+           var historyHead = $scope.history.shift();
+           alert(historyHead.query);
+           $scope.makeSolrRequest(historyHead.query, historyHead.host, historyHead.core)
         };
 
         $scope.clear = function(){

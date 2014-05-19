@@ -34,3 +34,8 @@
 .spacer {
     padding-top:10px;
 }
+
+.underlined {
+  text-decoration: underline;
+  cursor: pointer;
+}
