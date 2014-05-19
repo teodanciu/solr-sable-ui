@@ -4,43 +4,7 @@ myAppModule.config(['$httpProvider', function($httpProvider) {
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
     }
 ]);
-myAppModule.controller("HelloController",
-    function($scope) {
-        $scope.greeting = {text: 'Hello'};
-})
-.controller("CartController",
-    function($scope) {
-        $scope.bill = {};
-
-        $scope.items = [
-            {title: 'Paint pots', quantity: 8, price: 2},
-            {title: 'Polka dots', quantity: 17, price: 10},
-            {title: 'Pebbles', quantity: 5, price: 20}
-        ];
-
-        $scope.remove = function (index) {
-            $scope.items.splice(index, 1);
-        };
-
-        $scope.totalCart = function() {
-            var total = 0;
-            for (var i = 0, len = $scope.items.length; i < len; i ++) {
-                total = total + $scope.items[i].price * $scope.items[i].quantity;
-            }
-            return total;
-        };
-
-        $scope.subtotal = function(){
-            return $scope.totalCart() - $scope.bill.discount;
-        };
-
-        function calculateDiscount(newValue, oldValue, $scope) {
-            $scope.bill.discount  = newValue > 100 ? 10 : 0;
-        }
-
-        $scope.$watch($scope.totalCart, calculateDiscount);
-})
-.controller("SolrController",
+myAppModule.controller("SolrController",
     function($scope, $http) {
 
         $scope.queries = [
@@ -54,19 +18,7 @@ myAppModule.controller("HelloController",
         var initialQuery = parsedUrl.param("query") || $scope.queries[0];
         var initialHost = parsedUrl.param("host") || $scope.hosts[0];
 
-        $scope.current = {
-            query: initialQuery,
-            data: "",
-            host: initialHost,
-            title: ""
-        };
-        $scope.previous = {
-            query: "",
-            data: "",
-            host: "",
-            title: ""
-        };
-
+        clearState();
 
 //        var userId = Math.floor(Math.random()*10 + 1);
 //        $http.get("http://jsonplaceholder.typicode.com/posts?userId="+ userId).
@@ -86,18 +38,23 @@ myAppModule.controller("HelloController",
               });
         };
         $scope.clear = function(){
-            $scope.current.query = initialQuery;
-            $scope.current.host = initialHost;
-            $scope.current.data = "";
-            $scope.current.title= "";
-
+            clearState();
             $("#jsonoutput").html("");
-
-            $scope.previous.query = "";
-            $scope.previous.host= ";";
-            $scope.previous.data = "";
-            $scope.previous.title = "";
-
             $("#jsonoutput-previous").html("");
         };
-});
+
+        function clearState() {
+            $scope.current = {
+                query: initialQuery,
+                data: "",
+                host: initialHost,
+                title: ""
+            };
+            $scope.previous = {
+                query: "",
+                data: "",
+                host: "",
+                title: ""
+            };
+        }
+    });
