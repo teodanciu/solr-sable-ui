@@ -16,13 +16,12 @@ $.extend(jQuery,
 {
     // json 可傳入 json 或 JavaScript Object
     // container 為輸出的容器，jQuery Object
-    JSONView: function (json, container) {
+    JSONView: function (json, container, keep) {
         var ob;
         if (typeof json == 'string')
             ob = JSON.parse(json);
         else
             ob = json;
-//        container.html("");
         var p, l = [], c = container;
 
         var repeat = function (s, n) {  //產生 s 字元 n 次
@@ -110,7 +109,9 @@ $.extend(jQuery,
         }
 
 
-        $('#' + container).html("");
+        if (!keep) {
+            $('#' + container).html("");
+        }
         var result = $('<div id="result"/>').appendTo('#'+container);
 
         var f = true;

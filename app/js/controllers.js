@@ -52,8 +52,8 @@ myAppModule.controller("SolrController",
                     $scope.current.title = $scope.current.query + " on " + $scope.current.host + "/" + $scope.current.core;
 
 
-                    $.JSONView(data.response, 'jsonoutput');
-                    $.JSONView($scope.previous.data, 'jsonoutput-previous');
+                    $.JSONView(data.response, 'jsonoutput', false);
+                    $.JSONView($scope.previous.data, 'jsonoutput-previous', false);
             }).error(function (data, status, headers, config) {
                     alert("Error:" + status +" data:" + data);
               });
