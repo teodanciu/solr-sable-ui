@@ -58,20 +58,21 @@ myAppModule.controller("HelloController",
             host: ""
         };
 
+
+//        var userId = Math.floor(Math.random()*10 + 1);
+//        $http.get("http://jsonplaceholder.typicode.com/posts?userId="+ userId).
         $scope.makeSolrRequest = function() {
-            if ($scope.queries.indexOf($scope.current.query) == -1) {
+            if ($scope.queries.indexOf($scope.current.query) == -1 && $scope.current.query && $scope.current.query.length !== 0)  {
                 $scope.queries.push($scope.current.query);
             }
-            //$http.get("http://localhost:8983/solr/collection1/select?q=id%3A%22IW-02%22&wt=json&indent=true").
-            var userId = Math.floor(Math.random()*10 + 1);
-            $http.get("http://jsonplaceholder.typicode.com/posts?userId="+ userId).
-                success(function (data, status, headers, config){
+            $http.jsonp("http://localhost:8983/solr/collection1/select?q=id%3A%22IW-02%22&indent=true&wt=json&json.wrf=JSON_CALLBACK")
+              .success(function (data, status, headers, config){
                     $scope.previous.data = $scope.current.data;
-                    $scope.current.data = data;
-                    $.JSONView(data, 'jsonoutput');
+                    $scope.current.data = data.response;
+                    $.JSONView(data.response, 'jsonoutput');
                     $.JSONView($scope.previous.data, 'jsonoutput-previous');
             }).error(function (data, status, headers, config) {
-                    alert("Error:" + status +" data:" + data);
+                    aylert("Error:" + status +" data:" + data);
               });
         };
         $scope.clear = function(){
