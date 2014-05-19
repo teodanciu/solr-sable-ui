@@ -47,43 +47,51 @@ myAppModule.controller("HelloController",
             "*.*",
             "type:event"
         ];
+        $scope.hosts = [
+            "qa01.d"
+        ];
         $scope.current = {
             query: "*.*",
             data: "",
-            host: "qa01.d"
+            host: "qa01.d",
+            title: ""
         };
         $scope.previous = {
             query: "",
             data: "",
-            host: ""
+            host: "",
+            title: ""
         };
 
 
 //        var userId = Math.floor(Math.random()*10 + 1);
 //        $http.get("http://jsonplaceholder.typicode.com/posts?userId="+ userId).
         $scope.makeSolrRequest = function() {
-            if ($scope.queries.indexOf($scope.current.query) == -1 && $scope.current.query && $scope.current.query.length !== 0)  {
-                $scope.queries.push($scope.current.query);
-            }
+            pushDistinct($scope.current.query, $scope.queries);
+            pushDistinct($scope.current.host, $scope.hosts);
             $http.jsonp("http://localhost:8983/solr/collection1/select?q=id%3A%22IW-02%22&indent=true&wt=json&json.wrf=JSON_CALLBACK")
               .success(function (data, status, headers, config){
                     $scope.previous.data = $scope.current.data;
+                    $scope.previous.title = $scope.current.title;
                     $scope.current.data = data.response;
+                    $scope.current.title = $scope.current.query + " on " + $scope.current.host;
                     $.JSONView(data.response, 'jsonoutput');
                     $.JSONView($scope.previous.data, 'jsonoutput-previous');
             }).error(function (data, status, headers, config) {
-                    aylert("Error:" + status +" data:" + data);
+                    alert("Error:" + status +" data:" + data);
               });
         };
         $scope.clear = function(){
             $scope.current.query = "";
             $scope.current.host = "";
             $scope.current.data = "";
+            $scope.current.title = "";
             $("#jsonoutput").html("");
 
             $scope.previous.query = "";
             $scope.previous.host= ";";
             $scope.previous.data = "";
+            $scope.previous.title = "";
             $("#jsonoutput-previous").html("");
         }
 });
