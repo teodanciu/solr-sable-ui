@@ -18,6 +18,9 @@ $.extend(jQuery,
     // container 為輸出的容器，jQuery Object
     JSONView: function (json, container, keep) {
         var ob;
+        if (json === "") {
+            return;
+        } else
         if (typeof json == 'string')
             ob = JSON.parse(json);
         else
