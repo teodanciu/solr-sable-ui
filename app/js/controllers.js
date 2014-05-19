@@ -44,16 +44,20 @@ myAppModule.controller("HelloController",
     function($scope, $http) {
 
         $scope.queries = [
-            "*.*",
-            "type:event"
+            "*.*"
         ];
         $scope.hosts = [
-            "qa01.d"
+            "localhost"
         ];
+
+        var parsedUrl = jQuery.url(window.location);
+        var initialQuery = parsedUrl.param("query") || $scope.queries[0];
+        var initialHost = parsedUrl.param("host") || $scope.hosts[0];
+
         $scope.current = {
-            query: "*.*",
+            query: initialQuery,
             data: "",
-            host: "qa01.d",
+            host: initialHost,
             title: ""
         };
         $scope.previous = {
@@ -82,16 +86,18 @@ myAppModule.controller("HelloController",
               });
         };
         $scope.clear = function(){
-            $scope.current.query = "";
-            $scope.current.host = "";
+            $scope.current.query = initialQuery;
+            $scope.current.host = initialHost;
             $scope.current.data = "";
-            $scope.current.title = "";
+            $scope.current.title= "";
+
             $("#jsonoutput").html("");
 
             $scope.previous.query = "";
             $scope.previous.host= ";";
             $scope.previous.data = "";
             $scope.previous.title = "";
+
             $("#jsonoutput-previous").html("");
-        }
+        };
 });
