@@ -3,3 +3,13 @@ function pushDistinct(element, array) {
         array.push(element);
     }
 }
+
+function pushToHistory(state, history) {
+    history.unshift({
+       host: state.host,
+       core: state.core,
+       query: state.query,
+       data: state.data,
+       title: state.title
+    });
+}

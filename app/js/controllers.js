@@ -42,22 +42,18 @@ myAppModule.controller("SolrController",
 
             $http.jsonp("http://" + host + ":8983/solr/" + core + "/select?" + params)
               .success(function (data, status, headers, config){
-                    $scope.previous.host = $scope.current.host;
-                    $scope.previous.core = $scope.current.core;
-                    $scope.previous.query = $scope.current.query;
-                    $scope.previous.data = $scope.current.data;
-                    $scope.previous.title = $scope.current.title;
+                    pushToHistory($scope.current, $scope.history);
 
                     $scope.current.data = data.response;
                     $scope.current.title = $scope.current.query + " on " + $scope.current.host + "/" + $scope.current.core;
 
-
                     $.JSONView(data.response, 'jsonoutput', false);
-                    $.JSONView($scope.previous.data, 'jsonoutput-previous', false);
+                    $.JSONView($scope.history[0].data, 'jsonoutput-previous', false);
             }).error(function (data, status, headers, config) {
                     alert("Error:" + status +" data:" + data);
               });
         };
+
         $scope.clear = function(){
             clearState();
             $("#jsonoutput").html("");
@@ -72,12 +68,15 @@ myAppModule.controller("SolrController",
                 data: "",
                 title: ""
             };
-            $scope.previous = {
-                host: "",
-                core: "",
-                query: "",
-                data: "",
-                title: ""
-            };
+            $scope.historyTitle = "';"
+            $scope.history = [
+                {
+                    host:"",
+                    core: "",
+                    query: "",
+                    data: "",
+                    title: ""
+                }
+            ];
         }
     });
