@@ -17,15 +17,17 @@ $.extend(jQuery,
     // json 可傳入 json 或 JavaScript Object
     // container 為輸出的容器，jQuery Object
     JSONView: function (json, container, keep) {
-        var ob;
+        var obUnsorted;
         if (json === "") {
             return;
         } else
         if (typeof json == 'string')
-            ob = JSON.parse(json);
+            obUnsorted = JSON.parse(json);
         else
-            ob = json;
+            obUnsorted = json;
         var p, l = [], c = container;
+
+        var ob = returnSortedJsonObject(obUnsorted);
 
         var repeat = function (s, n) {  //產生 s 字元 n 次
             return new Array(n + 1).join(s);
@@ -136,3 +138,24 @@ $.extend(jQuery,
        return result;
     }
 });
+
+
+function returnSortedJsonObject(obj) {
+    var keys = [];
+    for (var key in obj) {
+        keys.push(key);
+    }
+    keys.sort();
+    var tempObj = new Object();
+
+    for (var i = 0; i < keys.length; i++) {
+        for (var key in obj) {
+            if (keys[i] == key) {
+                if (typeof obj[key] == 'object')
+                    obj[key] = returnSortedJsonObject(obj[key]);
+                tempObj[key] = obj[key];
+            }
+        }
+    }
+    return tempObj;
+}
