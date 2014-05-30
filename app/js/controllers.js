@@ -42,7 +42,7 @@ myAppModule.controller("SolrController",
                 indent: true
             });
 
-            $http.jsonp("http://" + host + ":8983/solr/" + core + "/select?" + params)
+            $http.jsonp("http://" + host + ":8080/solr/" + core + "/select?" + params)
               .success(function (data, status, headers, config){
                     pushToHistory($scope.current, $scope.history);
 
